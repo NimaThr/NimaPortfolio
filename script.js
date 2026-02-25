@@ -3,7 +3,7 @@ const qs = (id) => document.getElementById(id);
 
 const setText = (id, value) => {
   const el = qs(id);
-  if (el && value !== undefined && value !== null) el.textContent = value;
+  if (el && value !== undefined && value !== null && value !== "") el.textContent = value;
 };
 
 const setHref = (id, value) => {
@@ -30,7 +30,6 @@ navLinks?.querySelectorAll("a").forEach((a) =>
 setText("year", new Date().getFullYear());
 
 // ========= 1) Render from CONTENT (content.js) =========
-// این بخش باعث میشه پروژه‌ها + عکس‌ها + مهارت‌ها و ... بیاد
 if (typeof CONTENT !== "undefined") {
   // Title + meta
   document.title = CONTENT.site?.title || document.title;
@@ -83,7 +82,7 @@ if (typeof CONTENT !== "undefined") {
   renderTags("skillsBackend", CONTENT.skills?.backend);
   renderTags("skillsTools", CONTENT.skills?.tools);
 
-  // Projects (با عکس)
+  // Projects (with image)
   const projectsGrid = qs("projectsGrid");
   if (projectsGrid) {
     projectsGrid.innerHTML = (CONTENT.projects || [])
@@ -112,7 +111,7 @@ if (typeof CONTENT !== "undefined") {
       .join("");
   }
 
-  // Experience / Timeline
+  // Experience
   const timeline = qs("timeline");
   if (timeline) {
     timeline.innerHTML = (CONTENT.experience || [])
@@ -133,10 +132,13 @@ if (typeof CONTENT !== "undefined") {
   // Contact headline
   setText("contactHeadline", CONTENT.contact?.headline);
 
-  // Links (contact section)
+  // Contact Links (from content.js)
   if (CONTENT.site?.email) {
-    setHref("emailLink", `mailto:${CONTENT.site.email}`);
-    setText("emailLink", CONTENT.site.email);
+    const el = qs("emailLink");
+    if (el) {
+      el.textContent = CONTENT.site.email;
+      el.href = "mailto:" + CONTENT.site.email;
+    }
   }
 
   setHref("githubLink", CONTENT.links?.github);
@@ -144,7 +146,7 @@ if (typeof CONTENT !== "undefined") {
   setHref("telegramLink", CONTENT.links?.telegram);
   setHref("instagramLink", CONTENT.links?.instagram);
 
-  // Profile image (Hero avatar)
+  // Profile image (from content.js)
   const profileImg = qs("profileImg");
   const profileFallback = qs("profileFallback");
   if (profileImg && CONTENT.images?.profile) {
@@ -153,7 +155,7 @@ if (typeof CONTENT !== "undefined") {
     if (profileFallback) profileFallback.style.display = "none";
   }
 
-  // Resume button (اگر resumeUrl داشتی)
+  // Resume button
   const resumeBtn = qs("resumeBtn");
   resumeBtn?.addEventListener("click", (e) => {
     e.preventDefault();
@@ -164,7 +166,6 @@ if (typeof CONTENT !== "undefined") {
 }
 
 // ========= 2) Admin Panel Override (localStorage) =========
-// این بخش، تغییرات ذخیره شده از /admin.html رو روی صفحه اصلی اعمال می‌کنه
 try {
   const saved = JSON.parse(localStorage.getItem("portfolioContent") || "{}");
 
@@ -176,14 +177,10 @@ try {
   }
 
   // Role
-  if (saved.role) {
-    setText("heroRole", saved.role);
-  }
+  if (saved.role) setText("heroRole", saved.role);
 
   // Intro
-  if (saved.intro) {
-    setText("heroIntro", saved.intro);
-  }
+  if (saved.intro) setText("heroIntro", saved.intro);
 
   // Email
   if (saved.email) {
@@ -191,6 +188,23 @@ try {
     if (el) {
       el.textContent = saved.email;
       el.href = "mailto:" + saved.email;
+    }
+  }
+
+  // Links (override)
+  if (saved.github) setHref("githubLink", saved.github);
+  if (saved.linkedin) setHref("linkedinLink", saved.linkedin);
+  if (saved.telegram) setHref("telegramLink", saved.telegram);
+  if (saved.instagram) setHref("instagramLink", saved.instagram);
+
+  // Profile image (override) - dataURL saved from admin
+  if (saved.avatarDataUrl) {
+    const profileImg = qs("profileImg");
+    const profileFallback = qs("profileFallback");
+    if (profileImg) {
+      profileImg.src = saved.avatarDataUrl;
+      profileImg.style.display = "block";
+      if (profileFallback) profileFallback.style.display = "none";
     }
   }
 } catch (e) {
