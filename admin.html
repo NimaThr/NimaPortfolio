@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>پنل مدیریت ساده</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{font-family:Tahoma;background:#111;color:#fff;padding:20px}
+    label{display:block;margin-top:15px}
+    input, textarea{width:100%;padding:10px;border-radius:6px;border:none;margin-top:5px}
+    button{margin-top:20px;padding:12px 20px;background:#ffea02;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+    .hint{color:#bbb;font-size:13px;margin-top:8px}
+  </style>
+</head>
+<body>
+
+<h1>پنل تغییر محتوا</h1>
+<p class="hint">بعد از ذخیره، صفحه اصلی سایت را رفرش کن.</p>
+
+<label>نام</label>
+<input id="name">
+
+<label>عنوان شغلی</label>
+<input id="role">
+
+<label>متن معرفی</label>
+<textarea id="intro" rows="4"></textarea>
+
+<label>ایمیل</label>
+<input id="email">
+
+<button id="saveBtn" type="button">ذخیره</button>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+
+  const saved = JSON.parse(localStorage.getItem("portfolioContent") || "{}");
+  $("name").value  = saved.name  || "";
+  $("role").value  = saved.role  || "";
+  $("intro").value = saved.intro || "";
+  $("email").value = saved.email || "";
+
+  $("saveBtn").addEventListener("click", function(){
+    const data = {
+      name: $("name").value.trim(),
+      role: $("role").value.trim(),
+      intro: $("intro").value.trim(),
+      email: $("email").value.trim()
+    };
+
+    localStorage.setItem("portfolioContent", JSON.stringify(data));
+    alert("ذخیره شد ✅ حالا صفحه اصلی رو رفرش کن");
+  });
+})();
+</script>
+
+</body>
+</html>
