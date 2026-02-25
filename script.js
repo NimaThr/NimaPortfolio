@@ -128,4 +128,6 @@ qs("contactForm")?.addEventListener("submit", (e) => {
   e.preventDefault();
   alert("پیام شما ثبت شد ✅ (در مرحله بعد ارسال واقعی رو وصل می‌کنیم)");
   e.target.reset();
+
 });
+alert("SCRIPT LOADED ✅");
