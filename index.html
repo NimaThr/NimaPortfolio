@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="siteTitle">پورتفولیو</title>
+  <meta id="siteDesc" name="description" content="Portfolio"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#top">
+        <span class="brand__dot"></span>
+        <span id="brandName">نام شما</span>
+      </a>
+
+      <button class="menu-btn" id="menuBtn" aria-label="باز/بستن منو">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#about">معرفی</a>
+        <a href="#skills">مهارت‌ها</a>
+        <a href="#projects">پروژه‌ها</a>
+        <a href="#experience">رزومه</a>
+        <a href="#contact" class="btn btn--small">تماس</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="top" class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <p class="badge">👋 سلام، من</p>
+        <h1><span id="heroName">نام شما</span> هستم — <span class="grad" id="heroRole">توسعه‌دهنده وب</span></h1>
+        <p class="sub" id="heroIntro">
+          ...
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn" href="#projects">دیدن پروژه‌ها</a>
+          <a class="btn btn--ghost" href="#contact">ارتباط با من</a>
+          <a class="btn btn--link" href="#" id="resumeBtn">دانلود رزومه (PDF)</a>
+        </div>
+
+        <div class="stats" id="stats"></div>
+      </div>
+
+      <div class="hero-card">
+        <div class="avatar">
+          <div class="avatar__ring"></div>
+          <div class="avatar__img">
+            <img id="profileImg" alt="عکس پروفایل" style="width:100%;height:100%;border-radius:999px;object-fit:cover;display:none;">
+            <span id="profileFallback">👨‍💻</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>تمرکز من</h3>
+          <ul class="list">
+            <li>Landing Page و سایت معرفی</li>
+            <li>طراحی مدرن و تمیز</li>
+            <li>بهینه‌سازی سرعت و SEO</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Front-end</span>
+            <span class="chip">UI/UX</span>
+            <span class="chip">Performance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>معرفی</h2>
+        <p>چند خط درباره‌ی مسیر، سبک کاری و چیزی که ارائه می‌دم.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="card">
+          <h3 id="aboutHeading">من کی هستم؟</h3>
+          <p id="aboutText"></p>
+          <div class="about-actions">
+            <a class="btn btn--small" href="#contact">همکاری</a>
+            <a class="btn btn--small btn--ghost" href="#projects">نمونه‌کارها</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 id="whyTitle">چرا من؟</h3>
+          <ul class="checklist" id="whyList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <h2>مهارت‌ها</h2>
+        <p>ابزارها و تکنولوژی‌هایی که باهاشون کار می‌کنم.</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>Front-end</h3>
+          <div class="tags" id="skillsFrontend"></div>
+        </div>
+
+        <div class="skill-card">
+          <h3>Back-end</h3>
+          <div class="tags" id="skillsBackend"></div>
+        </div>
+
+        <div class="skill-card">
+          <h3>Tools</h3>
+          <div class="tags" id="skillsTools"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>پروژه‌ها</h2>
+        <p>نمونه‌کارها با لینک دمو و کد.</p>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="section section--alt">
+    <div class="container">
+      <div class="section-head">
+        <h2>رزومه</h2>
+        <p>تجربه‌های کاری، پروژه‌ای یا آموزشی.</p>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>تماس</h2>
+        <p id="contactHeadline"></p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="card">
+          <h3>راه‌های ارتباطی</h3>
+          <div class="contact-list">
+            <a id="emailLink" href="#">ایمیل</a>
+            <a id="linkedinLink" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a id="githubLink" href="#" target="_blank" rel="noreferrer">GitHub</a>
+            <a id="telegramLink" href="#" target="_blank" rel="noreferrer">Telegram</a>
+            <a id="instagramLink" href="#" target="_blank" rel="noreferrer">Instagram</a>
+          </div>
+        </div>
+
+        <form class="card form" id="contactForm">
+          <div class="row">
+            <label>نام</label>
+            <input required type="text" name="name" placeholder="نام شما" />
+          </div>
+          <div class="row">
+            <label>ایمیل</label>
+            <input required type="email" name="email" placeholder="example@mail.com" />
+          </div>
+          <div class="row">
+            <label>پیام</label>
+            <textarea required name="message" rows="5" placeholder="در مورد پروژه‌تون توضیح بدید..."></textarea>
+          </div>
+          <button class="btn" type="submit">ارسال پیام</button>
+          <p class="muted small" id="formHint">این فرم فعلاً نمایشی است (مرحله بعدی واقعی‌اش می‌کنیم).</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> <span id="footerName">نام شما</span>. همه حقوق محفوظ است.</span>
+      <a href="#top" class="to-top">بازگشت به بالا ↑</a>
+    </div>
+  </footer>
+
+  <script src="content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
