@@ -11,6 +11,12 @@ const setHref = (id, value) => {
   if (el && value) el.setAttribute("href", value);
 };
 
+const splitByComma = (str) =>
+  (str || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
 const renderTags = (containerId, items) => {
   const el = qs(containerId);
   if (!el) return;
@@ -20,7 +26,6 @@ const renderTags = (containerId, items) => {
 // ========= Mobile menu =========
 const menuBtn = qs("menuBtn");
 const navLinks = qs("navLinks");
-
 menuBtn?.addEventListener("click", () => navLinks.classList.toggle("open"));
 navLinks?.querySelectorAll("a").forEach((a) =>
   a.addEventListener("click", () => navLinks.classList.remove("open"))
@@ -68,14 +73,7 @@ if (typeof CONTENT !== "undefined") {
   }
 
   // About
-  setText("aboutHeading", CONTENT.about?.heading);
   setText("aboutText", CONTENT.about?.text);
-  setText("whyTitle", CONTENT.about?.whyTitle);
-
-  const whyList = qs("whyList");
-  if (whyList) {
-    whyList.innerHTML = (CONTENT.about?.why || []).map((x) => `<li>${x}</li>`).join("");
-  }
 
   // Skills
   renderTags("skillsFrontend", CONTENT.skills?.frontend);
@@ -169,20 +167,15 @@ if (typeof CONTENT !== "undefined") {
 try {
   const saved = JSON.parse(localStorage.getItem("portfolioContent") || "{}");
 
-  // Name
+  // Name / Role / Intro / Email
   if (saved.name) {
     setText("brandName", saved.name);
     setText("heroName", saved.name);
     setText("footerName", saved.name);
   }
-
-  // Role
   if (saved.role) setText("heroRole", saved.role);
-
-  // Intro
   if (saved.intro) setText("heroIntro", saved.intro);
 
-  // Email
   if (saved.email) {
     const el = qs("emailLink");
     if (el) {
@@ -191,13 +184,65 @@ try {
     }
   }
 
-  // Links (override)
+  // About text
+  if (saved.aboutText) setText("aboutText", saved.aboutText);
+
+  // Skills override (comma separated)
+  if (saved.skillsFrontend) renderTags("skillsFrontend", splitByComma(saved.skillsFrontend));
+  if (saved.skillsBackend) renderTags("skillsBackend", splitByComma(saved.skillsBackend));
+  if (saved.skillsTools) renderTags("skillsTools", splitByComma(saved.skillsTools));
+
+  // Projects override (one line per project)
+  // format: title | desc | demo | github | tag1, tag2
+  if (saved.projects) {
+    const lines = saved.projects
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    const projects = lines.map((line) => {
+      const parts = line.split("|").map((p) => p.trim());
+      const [title, desc, demo, github, tagsStr] = parts;
+      return {
+        title: title || "",
+        desc: desc || "",
+        demo: demo || "#",
+        github: github || "#",
+        tags: splitByComma(tagsStr || "")
+      };
+    });
+
+    const projectsGrid = qs("projectsGrid");
+    if (projectsGrid) {
+      projectsGrid.innerHTML = projects
+        .map((p) => {
+          const tags = (p.tags || []).map((t) => `<span class="pill">${t}</span>`).join("");
+          return `
+            <article class="project card">
+              <div class="project__thumb"><span>📌</span></div>
+              <div class="project__body">
+                <h3>${p.title}</h3>
+                <p>${p.desc}</p>
+                <div class="project__meta">${tags}</div>
+                <div class="project__links">
+                  <a class="btn btn--small" href="${p.demo}" target="_blank" rel="noreferrer">دمو</a>
+                  <a class="btn btn--small btn--ghost" href="${p.github}" target="_blank" rel="noreferrer">گیت‌هاب</a>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+  }
+
+  // Links override
   if (saved.github) setHref("githubLink", saved.github);
   if (saved.linkedin) setHref("linkedinLink", saved.linkedin);
   if (saved.telegram) setHref("telegramLink", saved.telegram);
   if (saved.instagram) setHref("instagramLink", saved.instagram);
 
-  // Profile image (override) - dataURL saved from admin
+  // Profile image override (dataURL saved from admin)
   if (saved.avatarDataUrl) {
     const profileImg = qs("profileImg");
     const profileFallback = qs("profileFallback");
