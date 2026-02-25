@@ -5,52 +5,151 @@
   <title>پنل مدیریت ساده</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body{font-family:Tahoma;background:#111;color:#fff;padding:20px}
-    label{display:block;margin-top:15px}
-    input, textarea{width:100%;padding:10px;border-radius:6px;border:none;margin-top:5px}
-    button{margin-top:20px;padding:12px 20px;background:#ffea02;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-    .hint{color:#bbb;font-size:13px;margin-top:8px}
+    body{font-family:Tahoma;background:#111;color:#fff;padding:20px;max-width:720px;margin:auto}
+    label{display:block;margin-top:14px;color:#ddd}
+    input, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#1b1b1b;color:#fff;margin-top:6px}
+    button{margin-top:18px;padding:12px 18px;background:#ffea02;border:none;border-radius:10px;font-weight:bold;cursor:pointer;color:#111}
+    .hint{color:#bbb;font-size:13px;margin-top:8px;line-height:1.8}
+    .row{margin-top:10px}
+    .small{font-size:12px;color:#aaa}
+    .preview{margin-top:10px;display:flex;gap:10px;align-items:center}
+    .avatar{
+      width:56px;height:56px;border-radius:999px;overflow:hidden;
+      border:1px solid #333;background:#1b1b1b;display:grid;place-items:center
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover;display:none}
   </style>
 </head>
 <body>
 
 <h1>پنل تغییر محتوا</h1>
-<p class="hint">بعد از ذخیره، صفحه اصلی سایت را رفرش کن.</p>
+<p class="hint">
+  این تغییرات روی همین مرورگر ذخیره می‌شوند و روی صفحه اصلی اعمال می‌شوند.
+  بعد از ذخیره، صفحه اصلی را با <b>Ctrl + Shift + R</b> رفرش کن.
+</p>
 
-<label>نام</label>
-<input id="name">
+<div class="row">
+  <label>نام</label>
+  <input id="name" placeholder="مثلاً نیما طاهریان">
+</div>
 
-<label>عنوان شغلی</label>
-<input id="role">
+<div class="row">
+  <label>عنوان شغلی</label>
+  <input id="role" placeholder="مثلاً Front-end Developer">
+</div>
 
-<label>متن معرفی</label>
-<textarea id="intro" rows="4"></textarea>
+<div class="row">
+  <label>متن معرفی</label>
+  <textarea id="intro" rows="4" placeholder="یک معرفی کوتاه و حرفه‌ای..."></textarea>
+</div>
 
-<label>ایمیل</label>
-<input id="email">
+<div class="row">
+  <label>ایمیل</label>
+  <input id="email" placeholder="youremail@example.com">
+</div>
+
+<hr style="margin:18px 0;border:0;border-top:1px solid #222">
+
+<h3 style="margin:0 0 8px">لینک‌ها</h3>
+
+<div class="row">
+  <label>GitHub</label>
+  <input id="github" placeholder="https://github.com/username">
+</div>
+
+<div class="row">
+  <label>LinkedIn</label>
+  <input id="linkedin" placeholder="https://linkedin.com/in/username">
+</div>
+
+<div class="row">
+  <label>Telegram</label>
+  <input id="telegram" placeholder="https://t.me/username">
+</div>
+
+<div class="row">
+  <label>Instagram</label>
+  <input id="instagram" placeholder="https://instagram.com/username">
+</div>
+
+<hr style="margin:18px 0;border:0;border-top:1px solid #222">
+
+<h3 style="margin:0 0 8px">عکس پروفایل (اختیاری)</h3>
+<p class="small">اگر عکس انتخاب کنی، داخل مرورگر ذخیره می‌شود. بهتر است عکس سبک باشد (ترجیحاً زیر 1MB).</p>
+
+<div class="preview">
+  <div class="avatar">
+    <img id="avatarImg" alt="avatar preview">
+    <span id="avatarFallback">👤</span>
+  </div>
+  <div style="flex:1">
+    <input id="avatarFile" type="file" accept="image/*">
+    <div class="small">اگر نمی‌خواهی عکس باشد، فایل را خالی بگذار.</div>
+  </div>
+</div>
 
 <button id="saveBtn" type="button">ذخیره</button>
 
 <script>
 (function(){
-  const $ = id => document.getElementById(id);
+  const $ = (id) => document.getElementById(id);
 
-  const saved = JSON.parse(localStorage.getItem("portfolioContent") || "{}");
+  const KEY = "portfolioContent";
+  const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+
   $("name").value  = saved.name  || "";
   $("role").value  = saved.role  || "";
   $("intro").value = saved.intro || "";
   $("email").value = saved.email || "";
+
+  $("github").value   = saved.github   || "";
+  $("linkedin").value = saved.linkedin || "";
+  $("telegram").value = saved.telegram || "";
+  $("instagram").value= saved.instagram|| "";
+
+  // avatar preview (if already saved)
+  if (saved.avatarDataUrl) {
+    $("avatarImg").src = saved.avatarDataUrl;
+    $("avatarImg").style.display = "block";
+    $("avatarFallback").style.display = "none";
+  }
+
+  // when user selects a new image
+  $("avatarFile").addEventListener("change", async () => {
+    const file = $("avatarFile").files && $("avatarFile").files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      $("avatarImg").src = reader.result;
+      $("avatarImg").style.display = "block";
+      $("avatarFallback").style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  });
 
   $("saveBtn").addEventListener("click", function(){
     const data = {
       name: $("name").value.trim(),
       role: $("role").value.trim(),
       intro: $("intro").value.trim(),
-      email: $("email").value.trim()
+      email: $("email").value.trim(),
+      github: $("github").value.trim(),
+      linkedin: $("linkedin").value.trim(),
+      telegram: $("telegram").value.trim(),
+      instagram: $("instagram").value.trim(),
+      // keep previous avatar unless user picked a new one
+      avatarDataUrl: saved.avatarDataUrl || null
     };
 
-    localStorage.setItem("portfolioContent", JSON.stringify(data));
-    alert("ذخیره شد ✅ حالا صفحه اصلی رو رفرش کن");
+    // If user picked a new image, store its DataURL
+    const file = $("avatarFile").files && $("avatarFile").files[0];
+    if (file && $("avatarImg").src) {
+      data.avatarDataUrl = $("avatarImg").src;
+    }
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    alert("ذخیره شد ✅ حالا صفحه اصلی را Ctrl + Shift + R رفرش کن");
   });
 })();
 </script>
